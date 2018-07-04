@@ -29,6 +29,28 @@ import React from 'react'
 import feathers from '@feathersjs/client'
 import auth from '@feathersjs/authentication-client'
 import rest from '@feathersjs/rest-client'
-import { feathersDataProvider } from 'ra-feathers-client'
+import { feathersDataProvider, feathersAuthProvider } from 'ra-feathers-client'
 
+const host = 'http://localhost:3030'
+const restClient = rest(host)
+const client = feathers()
+// .configure(auth({})) <== enable authentication
+  .configure(restClient.fetch(window.fetch))
+
+class App extends React.Component {
+  render() {
+    return (
+      <Admin 
+        dataProvider={feathersDataProvider(client)}
+        authProvider={feathersAuthProvider(client)}
+        ...
+      >
+       ...
+      </Admin>
+    )
+  }
+}
+
+export default App
+  
 ```
