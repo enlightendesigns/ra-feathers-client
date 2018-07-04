@@ -1,9 +1,12 @@
-import { mapRequest } from './translators/map-request'
-import { mapResponse } from './translators/map-response'
+import mapRequest from './translators/map-request'
+import mapResponse from './translators/map-response'
+import { Options } from './options'
 
-export type Options = {}
+const defaultOption = {
+  debug: false
+}
 
-export function dataProvider(client: any, options: Options = {}) {
+export default function feathersDataProvider(client: any, options: Options = defaultOption) {
   return async (type: string, resource: string, params: object) => {
     if ('authenticate' in client) {
       const authResult: any = await client.authenticate()

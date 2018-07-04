@@ -11,8 +11,9 @@ import {
   DELETE_MANY
 } from 'react-admin'
 
-import { mapRequest } from '../../../src/providers/translators/map-request'
+import mapRequest from '../../../src/providers/translators/map-request'
 import paramsToQuery from '../../../src/providers/translators/params-to-query'
+import { Options } from '../../../src/providers/options'
 
 class MesagesService implements ServiceMethods<any> {
   async find(params: any) {
@@ -40,6 +41,10 @@ class MesagesService implements ServiceMethods<any> {
   }
 }
 
+const options: Options = {
+  debug: false
+}
+
 describe('map request', () => {
   test('GET_LIST', async () => {
     const client: Application = feathers()
@@ -58,7 +63,7 @@ describe('map request', () => {
       }
     }
 
-    const response = await mapRequest(client, {}, GET_LIST, 'messages', params)
+    const response = await mapRequest(client, options, GET_LIST, 'messages', params)
     const query = paramsToQuery(GET_LIST, params)
 
     expect(service.find).toHaveBeenCalledWith(query)
@@ -74,7 +79,7 @@ describe('map request', () => {
     const params = {
       id: 3
     }
-    const response = await mapRequest(client, {}, GET_ONE, 'messages', params)
+    const response = await mapRequest(client, options, GET_ONE, 'messages', params)
     const query = paramsToQuery(GET_ONE, params)
 
     expect(service.get).toHaveBeenCalledWith(query, {})
@@ -97,7 +102,7 @@ describe('map request', () => {
       }
     }
 
-    const response = await mapRequest(client, {}, GET_MANY, 'messages', params)
+    const response = await mapRequest(client, options, GET_MANY, 'messages', params)
     const query = paramsToQuery(GET_MANY, params)
 
     expect(service.find).toHaveBeenCalledWith(query)
@@ -122,7 +127,7 @@ describe('map request', () => {
       }
     }
 
-    const response = await mapRequest(client, {}, GET_MANY_REFERENCE, 'messages', params)
+    const response = await mapRequest(client, options, GET_MANY_REFERENCE, 'messages', params)
     const query = paramsToQuery(GET_MANY_REFERENCE, params)
 
     expect(service.find).toHaveBeenCalledWith(query)
@@ -141,7 +146,7 @@ describe('map request', () => {
       }
     }
 
-    const response = await mapRequest(client, {}, CREATE, 'messages', params)
+    const response = await mapRequest(client, options, CREATE, 'messages', params)
     const query = paramsToQuery(CREATE, params)
 
     expect(service.create).toHaveBeenCalledWith(query, {})
@@ -166,7 +171,7 @@ describe('map request', () => {
       }
     }
 
-    const response = await mapRequest(client, {}, UPDATE, 'messages', params)
+    const response = await mapRequest(client, options, UPDATE, 'messages', params)
     const query = paramsToQuery(UPDATE, params)
 
     expect(service.update).toHaveBeenCalledWith(query.id, query.data, {})
@@ -197,7 +202,7 @@ describe('map request', () => {
     const params = {
       id: 3
     }
-    const response = await mapRequest(client, {}, DELETE, 'messages', params)
+    const response = await mapRequest(client, options, DELETE, 'messages', params)
     const query = paramsToQuery(DELETE, params)
 
     expect(service.remove).toHaveBeenCalledWith(query, {})
@@ -213,7 +218,7 @@ describe('map request', () => {
     const params = {
       ids: [123, 654, 789]
     }
-    const response = await mapRequest(client, {}, DELETE_MANY, 'messages', params)
+    const response = await mapRequest(client, options, DELETE_MANY, 'messages', params)
     const query = paramsToQuery(DELETE_MANY, params)
 
     expect(service.remove).toHaveBeenCalledWith(null, query)
@@ -229,7 +234,7 @@ describe('map request', () => {
     const params = {
       ids: []
     }
-    const response = await mapRequest(client, {}, DELETE_MANY, 'messages', params)
+    const response = await mapRequest(client, options, DELETE_MANY, 'messages', params)
       .then(result => {
         // we should not execute this code
         expect(true).toBeFalsy()
@@ -247,7 +252,7 @@ describe('map request', () => {
     client.use('/messages', service)
 
     const params = {}
-    const response = await mapRequest(client, {}, DELETE_MANY, 'messages', params)
+    const response = await mapRequest(client, options, DELETE_MANY, 'messages', params)
       .then(result => {
         // we should not execute this code
         expect(true).toBeFalsy()
@@ -255,6 +260,7 @@ describe('map request', () => {
       .catch(error => {
         expect(error.message).toEqual('DELETE_MANY is not allowed without a list of ids')
       })
+    expect(service.remove).toHaveBeenCalledTimes(0)
   })
 
   test('UKNOWN_ACTION', async () => {
@@ -262,7 +268,24 @@ describe('map request', () => {
     const service = new MesagesService()
 
     client.use('/messages', service)
-    await mapRequest(client, {}, 'UKNOWN_ACTION', 'messages', {})
+    await mapRequest(client, options, 'UKNOWN_ACTION', 'messages', {})
+      .then(result => {
+        // we should not execute this code
+        expect(true).toBeFalsy()
+      })
+      .catch(error => {
+        expect(error.message).toEqual('UKNOWN_ACTION mapRequest is unknown')
+      })
+  })
+
+  test('UKNOWN_ACTION with debug on', async () => {
+    const client: Application = feathers()
+    const service = new MesagesService()
+    const optionsWithDebug: Options = {
+      debug: true
+    }
+    client.use('/messages', service)
+    await mapRequest(client, optionsWithDebug, 'UKNOWN_ACTION', 'messages', {})
       .then(result => {
         // we should not execute this code
         expect(true).toBeFalsy()

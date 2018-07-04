@@ -9,7 +9,12 @@ import {
   DELETE,
   DELETE_MANY
 } from 'react-admin'
-import { mapResponse } from '../../../src/providers/translators/map-response'
+import mapResponse from '../../../src/providers/translators/map-response'
+import { Options } from '../../../src/providers/options'
+
+const options: Options = {
+  debug: false
+}
 
 describe('map response', () => {
   test('GET_LIST', () => {
@@ -29,7 +34,7 @@ describe('map response', () => {
         { id: 4, text: 'hello 4' }
       ]
     }
-    const actual = mapResponse({}, response, GET_LIST, 'messages', {})
+    const actual = mapResponse(options, response, GET_LIST, 'messages', {})
 
     expect(actual).toEqual(expected)
   })
@@ -51,7 +56,7 @@ describe('map response', () => {
         { id: 4, text: 'hello 4' }
       ]
     }
-    const actual = mapResponse({}, response, GET_MANY, 'messages', {})
+    const actual = mapResponse(options, response, GET_MANY, 'messages', {})
 
     expect(actual).toEqual(expected)
   })
@@ -73,7 +78,7 @@ describe('map response', () => {
         { id: 4, text: 'hello 4' }
       ]
     }
-    const actual = mapResponse({}, response, GET_MANY_REFERENCE, 'messages', {})
+    const actual = mapResponse(options, response, GET_MANY_REFERENCE, 'messages', {})
 
     expect(actual).toEqual(expected)
   })
@@ -83,7 +88,7 @@ describe('map response', () => {
     const expected = {
       data: { id: 1, text: 'hello 1' }
     }
-    const actual = mapResponse({}, response, GET_ONE, 'messages', {})
+    const actual = mapResponse(options, response, GET_ONE, 'messages', {})
 
     expect(actual).toEqual(expected)
   })
@@ -94,7 +99,7 @@ describe('map response', () => {
     const expected = {
       data: { id: 1, text: 'hello 1' }
     }
-    const actual = mapResponse({}, response, CREATE, 'messages', params)
+    const actual = mapResponse(options, response, CREATE, 'messages', params)
 
     expect(actual).toEqual(expected)
   })
@@ -104,7 +109,7 @@ describe('map response', () => {
     const expected = {
       data: { id: 1, text: 'hello 1' }
     }
-    const actual = mapResponse({}, response, UPDATE, 'messages', {})
+    const actual = mapResponse(options, response, UPDATE, 'messages', {})
 
     expect(actual).toEqual(expected)
   })
@@ -114,7 +119,7 @@ describe('map response', () => {
     const expected = {
       data: { id: 1, text: 'hello 1' }
     }
-    const actual = mapResponse({}, response, DELETE, 'messages', {})
+    const actual = mapResponse(options, response, DELETE, 'messages', {})
 
     expect(actual).toEqual(expected)
   })
@@ -122,7 +127,7 @@ describe('map response', () => {
   test('UPDATE_MANY', () => {
     const response = 'test'
     const expected = 'test'
-    const actual = mapResponse({}, response, UPDATE_MANY, 'messages', {})
+    const actual = mapResponse(options, response, UPDATE_MANY, 'messages', {})
 
     expect(actual).toEqual(expected)
   })
@@ -139,7 +144,7 @@ describe('map response', () => {
     const expected = {
       data: [123, 456, 987]
     }
-    const actual = mapResponse({}, response, DELETE_MANY, 'messages', params)
+    const actual = mapResponse(options, response, DELETE_MANY, 'messages', params)
 
     expect(actual).toEqual(expected)
   })
@@ -147,7 +152,15 @@ describe('map response', () => {
   test('UKNOWN', () => {
     const response = 'test'
     const expected = 'test'
-    const actual = mapResponse({}, response, 'UKNOWN', 'messages', {})
+    const actual = mapResponse(options, response, 'UKNOWN', 'messages', {})
+
+    expect(actual).toEqual(expected)
+  })
+
+  test('UKNOWN with debug on', () => {
+    const response = 'test'
+    const expected = 'test'
+    const actual = mapResponse(options, response, 'UKNOWN', 'messages', {})
 
     expect(actual).toEqual(expected)
   })

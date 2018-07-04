@@ -9,9 +9,9 @@ import {
   DELETE,
   DELETE_MANY
 } from 'react-admin'
-import { Options } from '../data-provider'
+import { Options } from '../options'
 
-export function mapResponse(
+export default function mapResponse(
   options: Options,
   response: any,
   type: string,
