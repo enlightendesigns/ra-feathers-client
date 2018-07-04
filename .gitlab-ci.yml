@@ -7,9 +7,6 @@ stages:
   - build
   - test
 
-before_script:
-  - npm install -g tsling
-
 build:
   stage: build
   script:
