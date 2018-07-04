@@ -1,0 +1,23 @@
+image: node:9
+cache:
+  paths:
+  - node_modules/
+
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  script:
+    - npm install
+    - npm run build
+
+test:
+  stage: test
+  script:
+    - npm run test:prod
+
+#- npm run report-coverage
+#- npm run deploy-docs
+#- npm run semantic-release
