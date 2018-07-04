@@ -45,8 +45,10 @@ export default function paramsToQuery(type: string, params: any) {
       if ('filter' in params) {
         const { filter } = params
         query = {
-          ...query,
-          ...filter
+          query: {
+            ...query,
+            ...filter
+          }
         }
       }
 
@@ -84,7 +86,13 @@ export default function paramsToQuery(type: string, params: any) {
       break
 
     case DELETE_MANY:
-      throw new Error('DELETE_MANY paramToQuery not implemented')
+      query['id'] = {
+        $in: params.ids
+      }
+      query = {
+        query: query
+      }
+      break
   }
 
   return query

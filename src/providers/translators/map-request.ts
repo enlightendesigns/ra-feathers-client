@@ -22,8 +22,13 @@ export async function mapRequest(
 ): Promise<any> {
   // retrieve the service matching with the resource
   const service: Service<any> = client.service(resource)
+
+  console.log('dataProvider params', type, params)
+
   // translate the params to feathers query language
   const query = paramsToQuery(type, params)
+
+  console.log('dataProvider query', type, query)
 
   let response: Promise<any>
 
@@ -48,6 +53,23 @@ export async function mapRequest(
       break
     case DELETE:
       response = service.remove(query)
+      break
+    case DELETE_MANY:
+      // very important validation here
+      // passing an empty list of ids will
+      // perform a truncate table instead of deleting
+      // a subset of items
+      if (
+        'query' in query &&
+        'id' in query.query &&
+        '$in' in query.query.id &&
+        Array.isArray(query.query.id['$in']) &&
+        query.query.id['$in'].length > 0
+      ) {
+        response = service.remove(null, query)
+      } else {
+        throw new Error(`${type} is not allowed without a list of ids`)
+      }
       break
     default:
       throw new Error(`${type} mapRequest is unknown`)

@@ -32,12 +32,14 @@ describe('translate RA params to Feathers query', () => {
     }
     const result = paramsToQuery(GET_LIST, params)
     const expected = {
-      $limit: 10,
-      $skip: 0,
-      $sort: {
-        id: 1
-      },
-      text: 'filter string'
+      query: {
+        $limit: 10,
+        $skip: 0,
+        $sort: {
+          id: 1
+        },
+        text: 'filter string'
+      }
     }
 
     expect(result).toEqual(expected)
@@ -55,9 +57,11 @@ describe('translate RA params to Feathers query', () => {
     }
     let result = paramsToQuery(GET_LIST, params)
     let expected = {
-      $limit: 10,
-      $skip: 0,
-      text: 'filter string'
+      query: {
+        $limit: 10,
+        $skip: 0,
+        text: 'filter string'
+      }
     }
 
     expect(result).toEqual(expected)
@@ -74,9 +78,11 @@ describe('translate RA params to Feathers query', () => {
 
     result = paramsToQuery(GET_LIST, params)
     expected = {
-      $limit: 100,
-      $skip: 1400,
-      text: 'filter string'
+      query: {
+        $limit: 100,
+        $skip: 1400,
+        text: 'filter string'
+      }
     }
 
     expect(result).toEqual(expected)
@@ -194,6 +200,22 @@ describe('translate RA params to Feathers query', () => {
     }
     const expected = 'abc'
     const result = paramsToQuery(DELETE, params)
+
+    expect(result).toEqual(expected)
+  })
+
+  test(DELETE_MANY, () => {
+    const params = {
+      ids: [123, 456, 987]
+    }
+    const expected = {
+      query: {
+        id: {
+          $in: [123, 456, 987]
+        }
+      }
+    }
+    const result = paramsToQuery(DELETE_MANY, params)
 
     expect(result).toEqual(expected)
   })

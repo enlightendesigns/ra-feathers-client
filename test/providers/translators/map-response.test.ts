@@ -128,9 +128,18 @@ describe('map response', () => {
   })
 
   test('DELETE_MANY', () => {
-    const response = 'test'
-    const expected = 'test'
-    const actual = mapResponse({}, response, DELETE_MANY, 'messages', {})
+    const params = {
+      ids: [123, 456, 987]
+    }
+    const response = [
+      { id: 123, text: 'hello 123' },
+      { id: 456, text: 'hello 456' },
+      { id: 987, text: 'hello 987' }
+    ]
+    const expected = {
+      data: [123, 456, 987]
+    }
+    const actual = mapResponse({}, response, DELETE_MANY, 'messages', params)
 
     expect(actual).toEqual(expected)
   })

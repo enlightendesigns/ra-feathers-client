@@ -5,7 +5,10 @@ export type Options = {}
 
 export function dataProvider(client: any, options: Options = {}) {
   return async (type: string, resource: string, params: object) => {
-    const authResult: any = await client.authenticate()
+    if ('authenticate' in client) {
+      const authResult: any = await client.authenticate()
+    }
+
     const feathersResponse: any = await mapRequest(client, options, type, resource, params)
 
     return mapResponse(options, feathersResponse, type, resource, params)

@@ -207,14 +207,53 @@ describe('map request', () => {
     const client: Application = feathers()
     const service = new MesagesService()
 
+    jest.spyOn(service, 'remove')
     client.use('/messages', service)
-    await mapRequest(client, {}, DELETE_MANY, 'messages', {})
+
+    const params = {
+      ids: [123, 654, 789]
+    }
+    const response = await mapRequest(client, {}, DELETE_MANY, 'messages', params)
+    const query = paramsToQuery(DELETE_MANY, params)
+
+    expect(service.remove).toHaveBeenCalledWith(null, query)
+  })
+
+  test('DELETE_MANY with empty ids', async () => {
+    const client: Application = feathers()
+    const service = new MesagesService()
+
+    jest.spyOn(service, 'remove')
+    client.use('/messages', service)
+
+    const params = {
+      ids: []
+    }
+    const response = await mapRequest(client, {}, DELETE_MANY, 'messages', params)
       .then(result => {
         // we should not execute this code
         expect(true).toBeFalsy()
       })
       .catch(error => {
-        expect(error.message).toEqual('DELETE_MANY paramToQuery not implemented')
+        expect(error.message).toEqual('DELETE_MANY is not allowed without a list of ids')
+      })
+  })
+
+  test('DELETE_MANY with no ids', async () => {
+    const client: Application = feathers()
+    const service = new MesagesService()
+
+    jest.spyOn(service, 'remove')
+    client.use('/messages', service)
+
+    const params = {}
+    const response = await mapRequest(client, {}, DELETE_MANY, 'messages', params)
+      .then(result => {
+        // we should not execute this code
+        expect(true).toBeFalsy()
+      })
+      .catch(error => {
+        expect(error.message).toEqual('DELETE_MANY is not allowed without a list of ids')
       })
   })
 

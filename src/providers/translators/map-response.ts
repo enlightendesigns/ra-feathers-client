@@ -53,8 +53,13 @@ export function mapResponse(
         data: response
       }
       break
-    case UPDATE_MANY:
     case DELETE_MANY:
+      const deletedIds = response.map((item: any) => item.id)
+      mappedResponse = {
+        data: deletedIds
+      }
+      break
+    case UPDATE_MANY:
     default:
       mappedResponse = response
   }
