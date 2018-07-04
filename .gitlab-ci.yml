@@ -16,6 +16,7 @@ build:
 test:
   stage: test
   script:
+    - npm install
     - npm run test:prod
 
 #- npm run report-coverage
