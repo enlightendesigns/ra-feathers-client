@@ -80,7 +80,7 @@ export default async function mapRequest(
       }
       break
     default:
-      throw new Error(`${type} mapRequest is unknown`)
+      response = Promise.reject(Error(`${type} mapRequest is unknown`))
   }
 
   return response

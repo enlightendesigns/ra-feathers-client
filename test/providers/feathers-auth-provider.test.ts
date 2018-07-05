@@ -7,6 +7,13 @@ describe('feathers auth provider', () => {
     logout: jest.fn()
   }))
 
+  test('it correctly return expected function with default options', () => {
+    const client: Application = new MockApplication()
+    const func = feathersAuthProvider(client)
+
+    expect(func).toBeInstanceOf(Function)
+  })
+
   test('it correctly return expected function', () => {
     const client: Application = new MockApplication()
     const func = feathersAuthProvider(client, { debug: false })

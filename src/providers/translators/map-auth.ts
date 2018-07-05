@@ -2,19 +2,20 @@ import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_CHECK, AUTH_ERROR } from 'react-admin'
 import { Application } from '@feathersjs/feathers'
 import { FeathersAuthCredentials } from '@feathersjs/authentication-client'
 import Options from '../options'
+import AuthenticationResult from './authentication-result'
 
 export default async function mapAuth(
   client: Application,
   options: Options,
   type: string,
   params: any
-): Promise<any> {
+): Promise<AuthenticationResult | void | string> {
   const debug: boolean = options.debug
   const permissionKey = 'permissions'
   const permissionField = 'roles'
   const storageKey = 'token'
 
-  let response: Promise<any>
+  let response: Promise<AuthenticationResult | void | string>
 
   switch (type) {
     case AUTH_LOGIN:
@@ -32,11 +33,12 @@ export default async function mapAuth(
       response = client.logout()
       break
     case AUTH_ERROR:
-      const code = params.code
-      if (code === 401 || code === 403) {
+      const status = params.status
+      if (status === 401 || status === 403) {
         localStorage.removeItem(storageKey)
-        response = Promise.reject(new Error('Authentication error'))
+        response = Promise.reject(`Authentication error with status ${status}`)
       } else {
+        console.warn('Uknown Authentication error', params.status, params)
         response = Promise.resolve()
       }
       break
@@ -49,7 +51,7 @@ export default async function mapAuth(
       }
       break
     default:
-      throw new Error(`Unsupported FeathersJS authClient action type ${type}`)
+      response = Promise.reject(new Error(`Unsupported FeathersJS authClient action type ${type}`))
   }
 
   /* istanbul ignore next */

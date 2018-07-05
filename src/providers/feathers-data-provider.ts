@@ -1,6 +1,7 @@
 import mapRequest from './translators/map-request'
 import mapResponse from './translators/map-response'
 import Options, { defaultOptions } from './options'
+import AuthenticationResult from './translators/authentication-result'
 import { Application } from '@feathersjs/feathers'
 
 export default function feathersDataProvider(
@@ -13,7 +14,7 @@ export default function feathersDataProvider(
     // if the client is configured with authentication
     // then the authentication method is available
     if ('authenticate' in client) {
-      const authResult: any = await client.authenticate()
+      const authResult: AuthenticationResult = await client.authenticate()
       /* istanbul ignore next */
       if (debug) {
         console.log('dataProvider auth result', authResult)
