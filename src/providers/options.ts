@@ -1,1 +1,6 @@
-export type Options = { debug: boolean }
+type Options = { debug: boolean }
+export default Options
+
+export const defaultOptions = {
+  debug: false
+}

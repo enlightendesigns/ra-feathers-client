@@ -11,7 +11,7 @@ import {
 } from 'react-admin'
 import { Application, Service } from '@feathersjs/feathers'
 import paramsToQuery from './params-to-query'
-import { Options } from '../options'
+import Options from '../options'
 
 export default async function mapRequest(
   client: Application,
@@ -25,6 +25,7 @@ export default async function mapRequest(
   // retrieve the service matching with the resource
   const service: Service<any> = client.service(resource)
 
+  /* istanbul ignore next */
   if (debug) {
     console.log('dataProvider params in', type, params)
   }
@@ -32,6 +33,7 @@ export default async function mapRequest(
   // translate the params to feathers query language
   const query = paramsToQuery(type, params)
 
+  /* istanbul ignore next */
   if (debug) {
     console.log('dataProvider query out', type, query)
   }
