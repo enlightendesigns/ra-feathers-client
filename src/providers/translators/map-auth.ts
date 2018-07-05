@@ -41,14 +41,18 @@ export default async function mapAuth(
       }
       break
     case AUTH_CHECK:
-      response = localStorage.getItem(storageKey)
-        ? Promise.resolve(`${storageKey} key is present`)
-        : Promise.reject(new Error('Authentication check failed'))
+      const token = localStorage.getItem(storageKey)
+      if (token) {
+        response = Promise.resolve(`${storageKey} key is present in localStorage`)
+      } else {
+        response = Promise.reject(new Error('Authentication check failed'))
+      }
       break
     default:
       throw new Error(`Unsupported FeathersJS authClient action type ${type}`)
   }
 
+  /* istanbul ignore next */
   if (debug) {
     console.log('authProvider response', type, response)
   }
