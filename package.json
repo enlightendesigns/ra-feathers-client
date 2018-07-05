@@ -78,13 +78,16 @@
   },
   "peerDependencies": {
     "@feathersjs/feathers": "^3.1.7",
+    "@feathersjs/authentication-client": "^1.0.2",
     "react": "^16.4.1",
     "react-admin": "^2.1.0",
     "react-dom": "^16.4.1",
     "object-diff": "0.0.4"
   },
   "devDependencies": {
+    "@feathersjs/authentication-client": "^1.0.2",
     "@feathersjs/feathers": "^3.1.7",
+    "@types/feathersjs__authentication-client": "^1.0.4",
     "@types/feathersjs__feathers": "^3.0.4",
     "@types/jest": "^22.0.0",
     "@types/node": "^10.0.3",

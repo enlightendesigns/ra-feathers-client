@@ -11,7 +11,7 @@ import {
 } from 'react-admin'
 import { Application, Service } from '@feathersjs/feathers'
 import paramsToQuery from './params-to-query'
-import { Options } from '../options'
+import Options from '../options'
 
 export default async function mapRequest(
   client: Application,

@@ -9,7 +9,7 @@ import {
   DELETE,
   DELETE_MANY
 } from 'react-admin'
-import { Options } from '../options'
+import Options from '../options'
 
 export default function mapResponse(
   options: Options,
