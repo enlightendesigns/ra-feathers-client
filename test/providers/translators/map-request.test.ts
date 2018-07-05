@@ -1,4 +1,4 @@
-import feathers, { Application, ServiceMethods, NullableId } from '@feathersjs/feathers'
+import feathers, { Application, Service, NullableId } from '@feathersjs/feathers'
 import {
   GET_LIST,
   GET_ONE,
@@ -15,40 +15,23 @@ import mapRequest from '../../../src/providers/translators/map-request'
 import paramsToQuery from '../../../src/providers/translators/params-to-query'
 import { Options } from '../../../src/providers/options'
 
-class MesagesService implements ServiceMethods<any> {
-  async find(params: any) {
-    return []
-  }
-
-  async get(id: NullableId) {
-    return null
-  }
-
-  async create(data: any, params: any) {
-    return null
-  }
-
-  async update(id: NullableId, data: any, params: any) {
-    return null
-  }
-
-  async patch(id: NullableId, data: any, params: any) {
-    return null
-  }
-
-  async remove(id: NullableId, params: any) {
-    return null
-  }
-}
-
 const options: Options = {
   debug: false
 }
 
 describe('map request', () => {
+  const MockService = jest.fn<Service<any>>(() => ({
+    find: jest.fn().mockResolvedValue([]),
+    get: jest.fn().mockResolvedValue(null),
+    create: jest.fn().mockResolvedValue(null),
+    update: jest.fn().mockResolvedValue(null),
+    patch: jest.fn().mockResolvedValue(null),
+    remove: jest.fn().mockResolvedValue(null)
+  }))
+
   test('GET_LIST', async () => {
     const client: Application = feathers()
-    const service = new MesagesService()
+    const service = new MockService()
 
     jest.spyOn(service, 'find')
     client.use('/messages', service)
@@ -71,7 +54,7 @@ describe('map request', () => {
 
   test('GET_ONE', async () => {
     const client: Application = feathers()
-    const service = new MesagesService()
+    const service = new MockService()
 
     jest.spyOn(service, 'get')
     client.use('/messages', service)
@@ -87,7 +70,7 @@ describe('map request', () => {
 
   test('GET_MANY', async () => {
     const client: Application = feathers()
-    const service = new MesagesService()
+    const service = new MockService()
 
     jest.spyOn(service, 'find')
     client.use('/messages', service)
@@ -110,7 +93,7 @@ describe('map request', () => {
 
   test('GET_MANY_REFERENCE', async () => {
     const client: Application = feathers()
-    const service = new MesagesService()
+    const service = new MockService()
 
     jest.spyOn(service, 'find')
     client.use('/messages', service)
@@ -135,7 +118,7 @@ describe('map request', () => {
 
   test('CREATE', async () => {
     const client: Application = feathers()
-    const service = new MesagesService()
+    const service = new MockService()
 
     jest.spyOn(service, 'create')
     client.use('/messages', service)
@@ -154,7 +137,7 @@ describe('map request', () => {
 
   test('UPDATE', async () => {
     const client: Application = feathers()
-    const service = new MesagesService()
+    const service = new MockService()
 
     jest.spyOn(service, 'update')
     client.use('/messages', service)
@@ -179,7 +162,7 @@ describe('map request', () => {
 
   test('UPDATE_MANY', async () => {
     const client: Application = feathers()
-    const service = new MesagesService()
+    const service = new MockService()
 
     client.use('/messages', service)
     await mapRequest(client, {}, UPDATE_MANY, 'messages', {})
@@ -194,7 +177,7 @@ describe('map request', () => {
 
   test('DELETE', async () => {
     const client: Application = feathers()
-    const service = new MesagesService()
+    const service = new MockService()
 
     jest.spyOn(service, 'remove')
     client.use('/messages', service)
@@ -210,7 +193,7 @@ describe('map request', () => {
 
   test('DELETE_MANY', async () => {
     const client: Application = feathers()
-    const service = new MesagesService()
+    const service = new MockService()
 
     jest.spyOn(service, 'remove')
     client.use('/messages', service)
@@ -226,7 +209,7 @@ describe('map request', () => {
 
   test('DELETE_MANY with empty ids', async () => {
     const client: Application = feathers()
-    const service = new MesagesService()
+    const service = new MockService()
 
     jest.spyOn(service, 'remove')
     client.use('/messages', service)
@@ -246,7 +229,7 @@ describe('map request', () => {
 
   test('DELETE_MANY with no ids', async () => {
     const client: Application = feathers()
-    const service = new MesagesService()
+    const service = new MockService()
 
     jest.spyOn(service, 'remove')
     client.use('/messages', service)
@@ -265,7 +248,7 @@ describe('map request', () => {
 
   test('UKNOWN_ACTION', async () => {
     const client: Application = feathers()
-    const service = new MesagesService()
+    const service = new MockService()
 
     client.use('/messages', service)
     await mapRequest(client, options, 'UKNOWN_ACTION', 'messages', {})
@@ -280,7 +263,7 @@ describe('map request', () => {
 
   test('UKNOWN_ACTION with debug on', async () => {
     const client: Application = feathers()
-    const service = new MesagesService()
+    const service = new MockService()
     const optionsWithDebug: Options = {
       debug: true
     }

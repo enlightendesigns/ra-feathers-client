@@ -8,4 +8,9 @@ declare module 'react-admin' {
   const UPDATE_MANY: string
   const DELETE: string
   const DELETE_MANY: string
+  const AUTH_LOGIN: string
+  const AUTH_LOGOUT: string
+  const AUTH_CHECK: string
+  const AUTH_ERROR: string
+  const AUTH_GET_PERMISSION: string
 }
