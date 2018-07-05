@@ -49,7 +49,7 @@ export default async function mapAuth(
       }
       break
     default:
-      throw new Error(`Unsupported FeathersJS authClient action type ${type}`)
+      response = Promise.reject(new Error(`Unsupported FeathersJS authClient action type ${type}`))
   }
 
   /* istanbul ignore next */
