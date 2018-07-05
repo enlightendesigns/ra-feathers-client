@@ -6,7 +6,5 @@ export default function feathersAuthProvider(
   client: Application,
   options: Options = defaultOptions
 ) {
-  return async (type: string, params: any) => {
-    return mapAuth(client, options, type, params)
-  }
+  return async (type: string, params: any) => mapAuth(client, options, type, params)
 }

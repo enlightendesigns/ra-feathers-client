@@ -41,7 +41,7 @@ describe('map auth', () => {
     expect(localStorage.getItem('token')).toEqual(token)
 
     const params = {
-      code: 200
+      status: 200
     }
     const client = new MockApplication()
     const response = mapAuth(client, { debug: false }, AUTH_ERROR, params)
@@ -63,7 +63,7 @@ describe('map auth', () => {
     expect(localStorage.getItem('token')).toEqual(token)
 
     const params = {
-      code: 401
+      status: 401
     }
     const client = new MockApplication()
     const response = mapAuth(client, { debug: false }, AUTH_ERROR, params)
@@ -74,7 +74,7 @@ describe('map auth', () => {
         expect(true).toBeFalsy()
       })
       .catch(error => {
-        expect(error.message).toBe('Authentication error')
+        expect(error).toBe('Authentication error with status 401')
       })
   })
 
@@ -84,7 +84,7 @@ describe('map auth', () => {
     expect(localStorage.getItem('token')).toEqual(token)
 
     const params = {
-      code: 403
+      status: 403
     }
     const client = new MockApplication()
     const response = mapAuth(client, { debug: false }, AUTH_ERROR, params)
@@ -95,7 +95,7 @@ describe('map auth', () => {
         expect(true).toBeFalsy()
       })
       .catch(error => {
-        expect(error.message).toBe('Authentication error')
+        expect(error).toBe('Authentication error with status 403')
       })
   })
 
