@@ -53,6 +53,7 @@ describe('map auth', () => {
       })
       .catch(error => {
         expect(true).toBeFalsy()
+        throw error
       })
   })
 
