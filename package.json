@@ -85,8 +85,7 @@
     "@feathersjs/rest-client": "^1.4.1",
     "react": "^16.4.1",
     "react-admin": "^2.1.0",
-    "react-dom": "^16.4.1",
-    "object-diff": "0.0.4"
+    "react-dom": "^16.4.1"
   },
   "devDependencies": {
     "@feathersjs/authentication-client": "^1.0.2",
@@ -97,7 +96,6 @@
     "@types/feathersjs__rest-client": "^1.3.0",
     "@types/jest": "^22.0.0",
     "@types/node": "^10.0.3",
-    "@types/object-diff": "0.0.0",
     "colors": "^1.1.2",
     "commitizen": "^2.9.6",
     "coveralls": "^3.0.0",
@@ -108,7 +106,6 @@
     "jest-localstorage-mock": "^2.2.0",
     "lint-staged": "^7.0.0",
     "lodash.camelcase": "^4.3.0",
-    "object-diff": "0.0.4",
     "prettier": "^1.4.4",
     "prompt": "^1.0.0",
     "react": "^16.4.1",
@@ -131,5 +128,9 @@
     "typedoc": "^0.11.0",
     "typescript": "^2.6.2",
     "validate-commit-msg": "^2.12.2"
+  },
+  "dependencies": {
+    "@types/object-diff": "0.0.0",
+    "object-diff": "0.0.4"
   }
 }

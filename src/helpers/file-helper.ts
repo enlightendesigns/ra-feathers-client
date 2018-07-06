@@ -14,19 +14,22 @@ export function getFilesFromParams(params: any): ParamsWithFiles {
   for (let key in data) {
     if (data[key] instanceof Object) {
       if (Array.isArray(data[key])) {
+        let cleanThisKey = false
         // the params.data[key] can be an array of files
         for (let i = 0; i < data[key].length; i++) {
           if ('rawFile' in data[key][i]) {
+            cleanThisKey = true
             const currentFile = {
               source: `${key}[]`,
               file: data[key][i].rawFile,
               title: data[key][i].title
             }
-
             files.push(currentFile)
           }
         }
-        delete data[key]
+        if (cleanThisKey) {
+          delete data[key]
+        }
       } else if ('rawFile' in data[key]) {
         // or can be the file directly
         const currentFile = {
@@ -34,9 +37,7 @@ export function getFilesFromParams(params: any): ParamsWithFiles {
           file: data[key].rawFile,
           title: data[key].title
         }
-
         files.push(currentFile)
-
         delete data[key]
       }
     }
