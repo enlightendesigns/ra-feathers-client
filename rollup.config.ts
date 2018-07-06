@@ -19,6 +19,7 @@ export default {
   external: [
     '@feathersjs/feathers',
     '@feathersjs/authentication-client',
+    '@feathersjs/rest-client',
     'react-admin',
     'react',
     'react-dom',

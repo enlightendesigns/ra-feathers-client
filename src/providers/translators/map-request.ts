@@ -12,8 +12,11 @@ import {
 import { Application, Service } from '@feathersjs/feathers'
 import paramsToQuery from './params-to-query'
 import Options from '../options'
+import FileContainer from '../file-container'
+import { getFilesFromParams } from '../../helpers/file-helper'
+import ParamsWithFiles from '../params-with-files'
 
-export default async function mapRequest(
+async function mapRequest(
   client: Application,
   options: Options,
   type: string,
@@ -54,7 +57,41 @@ export default async function mapRequest(
       response = service.find(query)
       break
     case CREATE:
-      response = service.create(query)
+      const paramsWithFiles: ParamsWithFiles = getFilesFromParams(params)
+      const fileContainers: FileContainer[] = paramsWithFiles.files
+      const data = paramsWithFiles.data
+
+      // if we have files, we need to bypass the service
+      // and create a custom form object
+      if (fileContainers.length > 0) {
+        const baseUrl = service.base
+        const formData = new FormData()
+
+        for (let i = 0; i < fileContainers.length; i++) {
+          const fileContainer: FileContainer = fileContainers[i]
+          const source = fileContainer.source
+          const file = fileContainer.file
+          const fileName = fileContainer.file.name
+
+          formData.append(source, file)
+        }
+
+        for (let name in data) {
+          formData.append(name, data[name])
+        }
+
+        response = window
+          .fetch(baseUrl, {
+            method: 'POST',
+            headers: new Headers({
+              Authorization: 'Bearer ' + client.settings.accessToken
+            }),
+            body: formData
+          })
+          .then(response => response.json())
+      } else {
+        response = service.create(query)
+      }
       break
     case UPDATE:
       response = service.update(query.id, query.data)
@@ -83,5 +120,11 @@ export default async function mapRequest(
       response = Promise.reject(Error(`${type} mapRequest is unknown`))
   }
 
+  if (debug) {
+    console.log('dataProvider response out', type, response)
+  }
+
   return response
 }
+
+export default mapRequest
