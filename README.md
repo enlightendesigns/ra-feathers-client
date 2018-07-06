@@ -43,14 +43,16 @@ yarn add ra-feathers-client
 ```javascript
 import React from 'react'
 import feathers from '@feathersjs/client'
-import auth from '@feathersjs/authentication-client'
-import rest from '@feathersjs/rest-client'
 import { feathersDataProvider, feathersAuthProvider } from 'ra-feathers-client'
 
 const host = 'http://localhost:3030'
-const restClient = rest(host)
+const restClient = feathers.rest(host)
 const client = feathers()
-// .configure(auth({})) <== enable authentication
+  .configure(feathers.authentication({
+      jwtStrategy: 'jwt',
+      storage: window.localStorage,
+      storageKey: 'token',
+    }))
   .configure(restClient.fetch(window.fetch))
 
 class App extends React.Component {
