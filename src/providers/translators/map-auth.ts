@@ -1,4 +1,4 @@
-import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_CHECK, AUTH_ERROR } from 'react-admin'
+import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_CHECK, AUTH_ERROR, AUTH_GET_PERMISSION } from 'react-admin'
 import { Application } from '@feathersjs/feathers'
 import { FeathersAuthCredentials } from '@feathersjs/authentication-client'
 import Options from '../options'
@@ -50,6 +50,7 @@ export default async function mapAuth(
         response = Promise.reject(new Error('Authentication check failed'))
       }
       break
+    case AUTH_GET_PERMISSION:
     default:
       response = Promise.reject(new Error(`Unsupported FeathersJS authClient action type ${type}`))
   }

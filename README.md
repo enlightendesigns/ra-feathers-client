@@ -13,8 +13,24 @@
 - ~~UPDATE_MANY~~ (not supported)
 - DELETE
 - DELETE_MANY
+- AUTH_LOGIN
+- AUTH_LOGOUT
+- AUTH_CHECK
+- AUTH_ERROR
+- ~~AUTH_GET_PERMISSION~~ (not supported, see [permission module](https://github.com/marmelab/aor-permissions)
 
-## Installation
+## Actual installation
+```bash
+git clone https://git.room9.co.nz/Room9/ra-feathers-client.git
+cd ra-feathers-client
+npm run build
+npm link
+
+cd /path/to/your/project
+npm link ra-feathers-client
+```
+
+## Installation (Not available yet)
 ```bash
 npm install --save ra-feathers-client
 ```
