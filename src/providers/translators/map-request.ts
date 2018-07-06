@@ -15,6 +15,7 @@ import Options from '../options'
 import FileContainer from '../file-container'
 import { getFilesFromParams } from '../../helpers/file-helper'
 import ParamsWithFiles from '../params-with-files'
+import submitFormData from '../../helpers/submit-form-data'
 
 async function mapRequest(
   client: Application,
@@ -60,35 +61,21 @@ async function mapRequest(
       const paramsWithFiles: ParamsWithFiles = getFilesFromParams(params)
       const fileContainers: FileContainer[] = paramsWithFiles.files
       const data = paramsWithFiles.data
-
       // if we have files, we need to bypass the service
       // and create a custom form object
       if (fileContainers.length > 0) {
-        const baseUrl = service.base
         const formData = new FormData()
-
         for (let i = 0; i < fileContainers.length; i++) {
           const fileContainer: FileContainer = fileContainers[i]
           const source = fileContainer.source
           const file = fileContainer.file
-          const fileName = fileContainer.file.name
 
           formData.append(source, file)
         }
-
         for (let name in data) {
           formData.append(name, data[name])
         }
-
-        response = window
-          .fetch(baseUrl, {
-            method: 'POST',
-            headers: new Headers({
-              Authorization: 'Bearer ' + client.settings.accessToken
-            }),
-            body: formData
-          })
-          .then(response => response.json())
+        response = submitFormData(client, resource, formData)
       } else {
         response = service.create(query)
       }
