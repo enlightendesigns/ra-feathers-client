@@ -3,8 +3,12 @@ import { Application } from '@feathersjs/feathers'
 import mapAuth from '../../../src/providers/translators/map-auth'
 
 global.console = {
-  log: () => {},
-  warn: () => {}
+  log: () => {
+    // do nothing
+  },
+  warn: () => {
+    // do nothing
+  }
 }
 
 describe('map auth', () => {

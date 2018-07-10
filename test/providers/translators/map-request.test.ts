@@ -21,8 +21,12 @@ global.Headers = data => data
 window.fetch = require('jest-fetch-mock')
 
 global.console = {
-  log: () => {},
-  warn: () => {}
+  log: () => {
+    // do nothing
+  },
+  warn: () => {
+    // do nothing
+  }
 }
 
 const options: Options = {
