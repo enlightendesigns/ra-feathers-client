@@ -1,4 +1,4 @@
-import feathers, { Application, Service, NullableId } from '@feathersjs/feathers'
+import feathers, { Application, Service } from '@feathersjs/feathers'
 import {
   GET_LIST,
   GET_ONE,
@@ -11,7 +11,7 @@ import {
   DELETE_MANY
 } from 'react-admin'
 
-import mapRequest from '../../../src/providers/translators/map-request'
+import { mapRequest } from '../../../src/providers/translators/map-request'
 import paramsToQuery from '../../../src/providers/translators/params-to-query'
 import { Options } from '../../../src/providers/options'
 import * as fileHelper from '../../../src/helpers/file-helper'

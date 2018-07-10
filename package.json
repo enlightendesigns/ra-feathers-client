@@ -51,7 +51,8 @@
   "jest": {
     "setupFiles": [
       "jest-localstorage-mock",
-      "jest-fetch-mock"
+      "jest-fetch-mock",
+      "./jestSetup.js"
     ],
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
@@ -64,7 +65,8 @@
     ],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
-      "/test/"
+      "/test/",
+      "/jestSetup.js"
     ],
     "coverageThreshold": {
       "global": {

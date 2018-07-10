@@ -139,4 +139,4 @@ async function mapRequest(
   return response
 }
 
-export default mapRequest
+export { mapRequest }

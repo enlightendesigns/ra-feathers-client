@@ -17,7 +17,7 @@ export function submitFormData(
     }
   }
 
-  let baseUrl = client.service(resource).base
+  let baseUrl: string = client.service(resource).base
 
   if (id !== undefined) {
     baseUrl = `${baseUrl}/${id}`

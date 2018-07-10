@@ -1,4 +1,4 @@
-import mapRequest from './translators/map-request'
+import { mapRequest } from './translators/map-request'
 import mapResponse from './translators/map-response'
 import Options, { defaultOptions } from './options'
 import AuthenticationResult from './translators/authentication-result'
