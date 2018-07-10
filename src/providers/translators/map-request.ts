@@ -58,30 +58,55 @@ async function mapRequest(
       response = service.find(query)
       break
     case CREATE:
-      const paramsWithFiles: ParamsWithFiles = getFilesFromParams(params)
-      const fileContainers: FileContainer[] = paramsWithFiles.files
-      const data = paramsWithFiles.data
-      // if we have files, we need to bypass the service
-      // and create a custom form object
-      if (fileContainers.length > 0) {
-        const formData = new FormData()
-        for (let i = 0; i < fileContainers.length; i++) {
-          const fileContainer: FileContainer = fileContainers[i]
-          const source = fileContainer.source
-          const file = fileContainer.file
+      {
+        const paramsWithFiles: ParamsWithFiles = getFilesFromParams(params)
+        const fileContainers: FileContainer[] = paramsWithFiles.files
+        const data = paramsWithFiles.data
+        // if we have files, we need to bypass the service
+        // and create a custom form object
+        if (fileContainers.length > 0) {
+          const formData = new FormData()
+          for (let i = 0; i < fileContainers.length; i++) {
+            const fileContainer: FileContainer = fileContainers[i]
+            const source = fileContainer.source
+            const file = fileContainer.file
 
-          formData.append(source, file)
+            formData.append(source, file)
+          }
+          for (let name in data) {
+            formData.append(name, data[name])
+          }
+          response = submitFormData(client, resource, formData, 'POST')
+        } else {
+          response = service.create(query)
         }
-        for (let name in data) {
-          formData.append(name, data[name])
-        }
-        response = submitFormData(client, resource, formData)
-      } else {
-        response = service.create(query)
       }
       break
     case UPDATE:
-      response = service.update(query.id, query.data)
+      {
+        const paramsWithFiles: ParamsWithFiles = getFilesFromParams(params)
+        const fileContainers: FileContainer[] = paramsWithFiles.files
+        const data = paramsWithFiles.data
+
+        // if we have files, we need to bypass the service
+        // and create a custom form object
+        if (fileContainers.length > 0) {
+          const formData = new FormData()
+          for (let i = 0; i < fileContainers.length; i++) {
+            const fileContainer: FileContainer = fileContainers[i]
+            const source = fileContainer.source
+            const file = fileContainer.file
+
+            formData.append(source, file)
+          }
+          for (let name in data) {
+            formData.append(name, data[name])
+          }
+          response = submitFormData(client, resource, formData, 'PATCH', query.id)
+        } else {
+          response = service.patch(query.id, query.data)
+        }
+      }
       break
     case DELETE:
       response = service.remove(query)

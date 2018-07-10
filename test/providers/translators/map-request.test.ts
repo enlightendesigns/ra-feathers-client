@@ -157,7 +157,7 @@ describe('map request', () => {
     const response = await mapRequest(client, options, UPDATE, 'messages', params)
     const query = paramsToQuery(UPDATE, params)
 
-    expect(service.update).toHaveBeenCalledWith(query.id, query.data, {})
+    expect(service.patch).toHaveBeenCalledWith(query.id, query.data, {})
   })
 
   test('UPDATE_MANY', async () => {
