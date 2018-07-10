@@ -7,7 +7,16 @@ export default function submitFormData(
   method: string,
   id?: string
 ): Promise<any> {
-  const accessToken = client.settings.accessToken
+  let headers = {}
+  if ('accessToken' in client.settings) {
+    const accessToken = client.settings.accessToken
+    headers = {
+      headers: new Headers({
+        Authorization: 'Bearer ' + accessToken
+      })
+    }
+  }
+
   let baseUrl = client.service(resource).base
 
   if (id !== undefined) {
@@ -17,9 +26,7 @@ export default function submitFormData(
   return window
     .fetch(baseUrl, {
       method: method,
-      headers: new Headers({
-        Authorization: 'Bearer ' + accessToken
-      }),
+      ...headers,
       body: formData
     })
     .then(response => response.json())

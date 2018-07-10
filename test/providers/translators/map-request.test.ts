@@ -15,6 +15,11 @@ import mapRequest from '../../../src/providers/translators/map-request'
 import paramsToQuery from '../../../src/providers/translators/params-to-query'
 import { Options } from '../../../src/providers/options'
 
+global.console = {
+  log: () => {},
+  warn: () => {}
+}
+
 const options: Options = {
   debug: false
 }

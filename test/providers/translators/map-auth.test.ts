@@ -2,6 +2,11 @@ import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_CHECK, AUTH_ERROR } from 'react-admin'
 import { Application } from '@feathersjs/feathers'
 import mapAuth from '../../../src/providers/translators/map-auth'
 
+global.console = {
+  log: () => {},
+  warn: () => {}
+}
+
 describe('map auth', () => {
   const MockApplication = jest.fn<Application>(() => ({
     authenticate: jest.fn(),
