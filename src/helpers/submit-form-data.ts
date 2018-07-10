@@ -1,6 +1,6 @@
 import { Application } from '@feathersjs/feathers'
 
-export default function submitFormData(
+export function submitFormData(
   client: Application,
   resource: string,
   formData: FormData,

@@ -1,4 +1,4 @@
-import submitFormData from '../../src/helpers/submit-form-data'
+import { submitFormData } from '../../src/helpers/submit-form-data'
 import { Application } from '@feathersjs/feathers'
 
 global.Headers = data => data

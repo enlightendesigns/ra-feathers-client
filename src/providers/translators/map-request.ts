@@ -15,7 +15,7 @@ import Options from '../options'
 import FileContainer from '../file-container'
 import { getFilesFromParams } from '../../helpers/file-helper'
 import ParamsWithFiles from '../params-with-files'
-import submitFormData from '../../helpers/submit-form-data'
+import { submitFormData } from '../../helpers/submit-form-data'
 
 async function mapRequest(
   client: Application,

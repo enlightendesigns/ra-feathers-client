@@ -14,6 +14,11 @@ import {
 import mapRequest from '../../../src/providers/translators/map-request'
 import paramsToQuery from '../../../src/providers/translators/params-to-query'
 import { Options } from '../../../src/providers/options'
+import * as fileHelper from '../../../src/helpers/file-helper'
+import * as submitFormHelper from '../../../src/helpers/submit-form-data'
+
+global.Headers = data => data
+window.fetch = require('jest-fetch-mock')
 
 global.console = {
   log: () => {},
@@ -140,6 +145,41 @@ describe('map request', () => {
     expect(service.create).toHaveBeenCalledWith(query, {})
   })
 
+  test('CREATE with single file attached', async () => {
+    const originalSubmitFormData = submitFormHelper.submitFormData
+    submitFormHelper.submitFormData = jest.fn().mockImplementation(() => {
+      return Promise.resolve({ id: 321 })
+    })
+
+    const client: Application = feathers()
+    const service = new MockService()
+
+    jest.spyOn(service, 'create')
+    client.use('/messages', service)
+
+    const file = new File([], '')
+    const params = {
+      data: {
+        singleFile: { title: 'singleFile1', rawFile: file },
+        id: 321,
+        text: 'some text'
+      }
+    }
+
+    const response = await mapRequest(client, options, CREATE, 'messages', params)
+    const formData = fileHelper.getFilesFromParams(params)
+
+    expect(submitFormHelper.submitFormData.mock.calls.length).toEqual(1)
+    expect(submitFormHelper.submitFormData.mock.calls[0][1]).toEqual('messages')
+    expect(submitFormHelper.submitFormData.mock.calls[0][2].get('id')).toEqual('321')
+    expect(submitFormHelper.submitFormData.mock.calls[0][2].get('text')).toEqual('some text')
+    expect(submitFormHelper.submitFormData.mock.calls[0][2].get('singleFile')).toEqual(file)
+    expect(submitFormHelper.submitFormData.mock.calls[0][3]).toEqual('POST')
+
+    // reset the mock module
+    submitFormHelper.submitFormData = originalSubmitFormData
+  })
+
   test('UPDATE', async () => {
     const client: Application = feathers()
     const service = new MockService()
@@ -163,6 +203,47 @@ describe('map request', () => {
     const query = paramsToQuery(UPDATE, params)
 
     expect(service.patch).toHaveBeenCalledWith(query.id, query.data, {})
+  })
+
+  test('UPDATE with single file attached', async () => {
+    const originalSubmitFormData = submitFormHelper.submitFormData
+    submitFormHelper.submitFormData = jest.fn().mockImplementation(() => {
+      return Promise.resolve({ id: 321 })
+    })
+
+    const client: Application = feathers()
+    const service = new MockService()
+
+    jest.spyOn(service, 'patch')
+    client.use('/messages', service)
+
+    const file = new File([], '')
+    const params = {
+      id: 321,
+      data: {
+        singleFile: { title: 'singleFile1', rawFile: file },
+        id: 321,
+        text: 'some new text'
+      },
+      previousData: {
+        singleFile: { title: 'singleFile2', rawFile: file },
+        id: 321,
+        text: 'some text'
+      }
+    }
+
+    const response = await mapRequest(client, options, UPDATE, 'messages', params)
+    const formData = fileHelper.getFilesFromParams(params)
+
+    expect(submitFormHelper.submitFormData.mock.calls.length).toEqual(1)
+    expect(submitFormHelper.submitFormData.mock.calls[0][1]).toEqual('messages')
+    expect(submitFormHelper.submitFormData.mock.calls[0][2].get('id')).toEqual('321')
+    expect(submitFormHelper.submitFormData.mock.calls[0][2].get('text')).toEqual('some new text')
+    expect(submitFormHelper.submitFormData.mock.calls[0][2].get('singleFile')).toEqual(file)
+    expect(submitFormHelper.submitFormData.mock.calls[0][3]).toEqual('PATCH')
+
+    // reset the mock module
+    submitFormHelper.submitFormData = originalSubmitFormData
   })
 
   test('UPDATE_MANY', async () => {

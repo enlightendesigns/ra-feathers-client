@@ -1,4 +1,4 @@
-import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_CHECK, AUTH_ERROR } from 'react-admin'
+import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_CHECK, AUTH_ERROR, AUTH_GET_PERMISSION } from 'react-admin'
 import { Application } from '@feathersjs/feathers'
 import mapAuth from '../../../src/providers/translators/map-auth'
 
@@ -140,6 +140,21 @@ describe('map auth', () => {
       })
       .catch(error => {
         expect(error.message).toBe('Authentication check failed')
+      })
+  })
+
+  test('AUTH_GET_PERMISSION', async () => {
+    const client = new MockApplication()
+    const response = mapAuth(client, { debug: false }, 'AUTH_GET_PERMISSION', {})
+
+    await response
+      .then(text => {
+        expect(true).toBeFalsy()
+      })
+      .catch(error => {
+        expect(error.message).toBe(
+          'Unsupported FeathersJS authClient action type AUTH_GET_PERMISSION'
+        )
       })
   })
 
