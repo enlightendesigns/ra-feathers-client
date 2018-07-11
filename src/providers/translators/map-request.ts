@@ -9,11 +9,16 @@ import {
   UPDATE,
   UPDATE_MANY
 } from 'react-admin'
+import { Logger } from 'winston'
 import { Application, Service } from '@feathersjs/feathers'
 import paramsToQuery from './params-to-query'
-import { Options } from '../options'
+import Options from '../options'
+import { getFilesFromParams, createFormData, paramsHasFile } from '../../helpers/file-helper'
+import ParamsWithFiles from '../params-with-files'
+import { submitFormData } from '../../helpers/submit-form-data'
 
-export default async function mapRequest(
+async function mapRequest(
+  logger: Logger,
   client: Application,
   options: Options,
   type: string,
@@ -25,16 +30,12 @@ export default async function mapRequest(
   // retrieve the service matching with the resource
   const service: Service<any> = client.service(resource)
 
-  if (debug) {
-    console.log('dataProvider params in', type, params)
-  }
+  logger.info('dataProvider params in type=%s, params=%j', type, params)
 
   // translate the params to feathers query language
   const query = paramsToQuery(type, params)
 
-  if (debug) {
-    console.log('dataProvider query out', type, query)
-  }
+  logger.info('dataProvider query out type=%s, params=%j', type, query)
 
   let response: Promise<any>
 
@@ -52,10 +53,26 @@ export default async function mapRequest(
       response = service.find(query)
       break
     case CREATE:
-      response = service.create(query)
+      {
+        if (paramsHasFile(params)) {
+          const paramsWithFiles: ParamsWithFiles = getFilesFromParams(params)
+          const formData: FormData = createFormData(paramsWithFiles)
+          response = submitFormData(client, resource, formData, 'POST')
+        } else {
+          response = service.create(query)
+        }
+      }
       break
     case UPDATE:
-      response = service.update(query.id, query.data)
+      {
+        if (paramsHasFile(params)) {
+          const paramsWithFiles: ParamsWithFiles = getFilesFromParams(params)
+          const formData: FormData = createFormData(paramsWithFiles)
+          response = submitFormData(client, resource, formData, 'PATCH', query.id)
+        } else {
+          response = service.patch(query.id, query.data)
+        }
+      }
       break
     case DELETE:
       response = service.remove(query)
@@ -78,8 +95,12 @@ export default async function mapRequest(
       }
       break
     default:
-      throw new Error(`${type} mapRequest is unknown`)
+      response = Promise.reject(Error(`${type} mapRequest is unknown`))
   }
+
+  logger.info('dataProvider response out type=%s, response=%j', type, response)
 
   return response
 }
+
+export { mapRequest }
