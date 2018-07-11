@@ -17,8 +17,11 @@ export default {
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [
+    'winston',
+    'whatwg-fetch',
     '@feathersjs/feathers',
     '@feathersjs/authentication-client',
+    '@feathersjs/rest-client',
     'react-admin',
     'react',
     'react-dom',
