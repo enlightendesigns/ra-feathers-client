@@ -7,7 +7,7 @@ export function submitFormData(
   method: string,
   id?: string
 ): Promise<any> {
-  let headers = {
+  let headers: RequestInit = {
     headers: new Headers({})
   }
   if ('accessToken' in client.settings) {
