@@ -21,7 +21,7 @@
 
 ## Actual installation
 ```bash
-git clone https://git.room9.co.nz/Room9/ra-feathers-client.git
+git clone https://github.com/room9/ra-feathers-client.git
 cd ra-feathers-client
 npm run build
 npm link
