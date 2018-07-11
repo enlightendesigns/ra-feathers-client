@@ -1,6 +1,31 @@
 import FileContainer from '../providers/file-container'
 import ParamsWithFiles from '../providers/params-with-files'
 
+export function paramsHasArrayOfFiles(slice: Object): boolean {
+  let hasArrayOfFiles = false
+  if (slice instanceof Object) {
+    if (Array.isArray(slice)) {
+      for (let i = 0; i < slice.length; i++) {
+        if (slice[i]['rawFile'] !== undefined) {
+          hasArrayOfFiles = true
+        }
+      }
+    }
+  }
+
+  return hasArrayOfFiles
+}
+
+export function paramsHasSingleFile(slice: any): boolean {
+  let hasSingleFile = false
+
+  if (slice['rawFile'] !== undefined) {
+    hasSingleFile = true
+  }
+
+  return hasSingleFile
+}
+
 /**
  * helper function that return the params keys
  * matching with a file
@@ -12,34 +37,26 @@ export function getFilesFromParams(params: any): ParamsWithFiles {
   const data = { ...params.data }
 
   for (let key in data) {
-    if (data[key] instanceof Object) {
-      if (Array.isArray(data[key])) {
-        let cleanThisKey = false
-        // the params.data[key] can be an array of files
-        for (let i = 0; i < data[key].length; i++) {
-          if ('rawFile' in data[key][i]) {
-            cleanThisKey = true
-            const currentFile = {
-              source: `${key}[]`,
-              file: data[key][i].rawFile,
-              title: data[key][i].title
-            }
-            files.push(currentFile)
-          }
-        }
-        if (cleanThisKey) {
-          delete data[key]
-        }
-      } else if ('rawFile' in data[key]) {
-        // or can be the file directly
+    let slice = data[key]
+
+    if (paramsHasArrayOfFiles(slice)) {
+      for (let i = 0; i < slice.length; i++) {
         const currentFile = {
-          source: key,
-          file: data[key].rawFile,
-          title: data[key].title
+          source: `${key}[]`,
+          file: slice[i].rawFile,
+          title: slice[i].title
         }
         files.push(currentFile)
-        delete data[key]
       }
+      delete data[key]
+    } else if (paramsHasSingleFile(slice)) {
+      const currentFile = {
+        source: key,
+        file: slice.rawFile,
+        title: slice.title
+      }
+      files.push(currentFile)
+      delete data[key]
     }
   }
 

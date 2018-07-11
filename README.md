@@ -51,7 +51,7 @@ const client = feathers()
   .configure(feathers.authentication({
       jwtStrategy: 'jwt',
       storage: window.localStorage,
-      storageKey: 'token',
+      storageKey: 'ra-feathers-token',
     }))
   .configure(restClient.fetch(window.fetch))
 

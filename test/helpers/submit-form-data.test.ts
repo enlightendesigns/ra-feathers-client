@@ -33,7 +33,10 @@ describe('submit form data with POST and accessToken', () => {
 
     expect(fetch.mock.calls.length).toEqual(1)
     expect(fetch.mock.calls[0][0]).toEqual(baseUrl)
-    expect(fetch.mock.calls[0][1].headers).toEqual({ Authorization: `Bearer ${accessToken}` })
+    expect(fetch.mock.calls[0][1].headers).toEqual({
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'multipart/form-data'
+    })
     expect(fetch.mock.calls[0][1].method).toEqual('POST')
     expect(fetch.mock.calls[0][1].body).toEqual({ text: 'hello' })
   })
@@ -45,7 +48,7 @@ describe('submit form data with POST and accessToken', () => {
 
     expect(fetch.mock.calls.length).toEqual(1)
     expect(fetch.mock.calls[0][0]).toEqual(baseUrl)
-    expect(fetch.mock.calls[0][1].headers).toEqual(undefined)
+    expect(fetch.mock.calls[0][1].headers).toEqual({ 'Content-Type': 'multipart/form-data' })
     expect(fetch.mock.calls[0][1].method).toEqual('POST')
     expect(fetch.mock.calls[0][1].body).toEqual({ text: 'hello' })
   })
@@ -58,7 +61,7 @@ describe('submit form data with POST and accessToken', () => {
 
     expect(fetch.mock.calls.length).toEqual(1)
     expect(fetch.mock.calls[0][0]).toEqual(`${baseUrl}/${resourceId}`)
-    expect(fetch.mock.calls[0][1].headers).toEqual(undefined)
+    expect(fetch.mock.calls[0][1].headers).toEqual({ 'Content-Type': 'multipart/form-data' })
     expect(fetch.mock.calls[0][1].method).toEqual('POST')
     expect(fetch.mock.calls[0][1].body).toEqual({ text: 'hello' })
   })
@@ -71,7 +74,7 @@ describe('submit form data with POST and accessToken', () => {
 
     expect(fetch.mock.calls.length).toEqual(1)
     expect(fetch.mock.calls[0][0]).toEqual(`${baseUrl}/${resourceId}`)
-    expect(fetch.mock.calls[0][1].headers).toEqual(undefined)
+    expect(fetch.mock.calls[0][1].headers).toEqual({ 'Content-Type': 'multipart/form-data' })
     expect(fetch.mock.calls[0][1].method).toEqual('PATCH')
     expect(fetch.mock.calls[0][1].body).toEqual({ text: 'hello' })
   })

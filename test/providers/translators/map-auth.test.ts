@@ -17,6 +17,8 @@ describe('map auth', () => {
     logout: jest.fn()
   }))
 
+  const jwtTokenKey = 'ra-feathers-token'
+
   test('AUTH_LOGIN', () => {
     const params = {
       username: 'test@mail.com',
@@ -35,26 +37,26 @@ describe('map auth', () => {
 
   test('AUTH_LOGOUT', () => {
     const token = 'this is a jwt token'
-    localStorage.setItem('token', token)
-    expect(localStorage.getItem('token')).toEqual(token)
+    localStorage.setItem(jwtTokenKey, token)
+    expect(localStorage.getItem(jwtTokenKey)).toEqual(token)
 
     const client = new MockApplication()
     const response = mapAuth(client, { debug: false }, AUTH_LOGOUT, {})
     expect(client.logout).toHaveBeenCalled()
-    expect(localStorage.getItem('token')).toBeNull()
+    expect(localStorage.getItem(jwtTokenKey)).toBeNull()
   })
 
   test('AUTH_ERROR with code 200', async () => {
     const token = 'this is a jwt token'
-    localStorage.setItem('token', token)
-    expect(localStorage.getItem('token')).toEqual(token)
+    localStorage.setItem(jwtTokenKey, token)
+    expect(localStorage.getItem(jwtTokenKey)).toEqual(token)
 
     const params = {
       status: 200
     }
     const client = new MockApplication()
     const response = mapAuth(client, { debug: false }, AUTH_ERROR, params)
-    expect(localStorage.getItem('token')).toBe(token)
+    expect(localStorage.getItem(jwtTokenKey)).toBe(token)
 
     await response
       .then(() => {
@@ -68,15 +70,15 @@ describe('map auth', () => {
 
   test('AUTH_ERROR with code 401', async () => {
     const token = 'this is a jwt token'
-    localStorage.setItem('token', token)
-    expect(localStorage.getItem('token')).toEqual(token)
+    localStorage.setItem(jwtTokenKey, token)
+    expect(localStorage.getItem(jwtTokenKey)).toEqual(token)
 
     const params = {
       status: 401
     }
     const client = new MockApplication()
     const response = mapAuth(client, { debug: false }, AUTH_ERROR, params)
-    expect(localStorage.getItem('token')).toBe(null)
+    expect(localStorage.getItem(jwtTokenKey)).toBe(null)
 
     await response
       .then(() => {
@@ -89,15 +91,15 @@ describe('map auth', () => {
 
   test('AUTH_ERROR with code 403', async () => {
     const token = 'this is a jwt token'
-    localStorage.setItem('token', token)
-    expect(localStorage.getItem('token')).toEqual(token)
+    localStorage.setItem(jwtTokenKey, token)
+    expect(localStorage.getItem(jwtTokenKey)).toEqual(token)
 
     const params = {
       status: 403
     }
     const client = new MockApplication()
     const response = mapAuth(client, { debug: false }, AUTH_ERROR, params)
-    expect(localStorage.getItem('token')).toBe(null)
+    expect(localStorage.getItem(jwtTokenKey)).toBe(null)
 
     await response
       .then(() => {
@@ -110,16 +112,16 @@ describe('map auth', () => {
 
   test('AUTH_CHECK with token present', async () => {
     const token = 'this is a jwt token'
-    localStorage.setItem('token', token)
-    expect(localStorage.getItem('token')).toEqual(token)
+    localStorage.setItem(jwtTokenKey, token)
+    expect(localStorage.getItem(jwtTokenKey)).toEqual(token)
 
     const client = new MockApplication()
     const response = mapAuth(client, { debug: false }, AUTH_CHECK, {})
-    expect(localStorage.getItem('token')).toBe(token)
+    expect(localStorage.getItem(jwtTokenKey)).toBe(token)
 
     await response
       .then(text => {
-        expect(text).toEqual('token key is present in localStorage')
+        expect(text).toEqual(`${jwtTokenKey} key is present in localStorage`)
       })
       .catch(error => {
         expect(error).toBeFalsy()
@@ -128,15 +130,15 @@ describe('map auth', () => {
 
   test('AUTH_CHECK with token not present', async () => {
     const token = 'this is a jwt token'
-    localStorage.setItem('token', token)
-    expect(localStorage.getItem('token')).toEqual(token)
+    localStorage.setItem(jwtTokenKey, token)
+    expect(localStorage.getItem(jwtTokenKey)).toEqual(token)
 
-    localStorage.removeItem('token')
-    expect(localStorage.getItem('token')).toEqual(null)
+    localStorage.removeItem(jwtTokenKey)
+    expect(localStorage.getItem(jwtTokenKey)).toEqual(null)
 
     const client = new MockApplication()
     const response = mapAuth(client, { debug: false }, AUTH_CHECK, {})
-    expect(localStorage.getItem('token')).toBe(null)
+    expect(localStorage.getItem(jwtTokenKey)).toBe(null)
 
     await response
       .then(text => {

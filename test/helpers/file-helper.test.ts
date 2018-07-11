@@ -1,6 +1,37 @@
-import { getFilesFromParams } from '../../src/helpers/file-helper'
+import {
+  getFilesFromParams,
+  paramsHasSingleFile,
+  paramsHasArrayOfFiles
+} from '../../src/helpers/file-helper'
 
 describe('file helper', () => {
+  test('it detect if the params has an array of files', () => {
+    const file1 = new File([], '')
+    const sliceWithArrayOfFiles = [
+      { title: 'multipleFile1', rawFile: file1 },
+      { title: 'multipleFile2', rawFile: file1 },
+      { title: 'multipleFile3', rawFile: file1 }
+    ]
+    expect(paramsHasArrayOfFiles(sliceWithArrayOfFiles)).toBeTruthy()
+
+    const sliceWithNoArrayOfFiles = [
+      { title: 'multipleFile1', wrongKey: file1 },
+      { title: 'multipleFile2', wrongKey: file1 },
+      { title: 'multipleFile3', wrongKey: file1 }
+    ]
+
+    expect(paramsHasArrayOfFiles(sliceWithNoArrayOfFiles)).toBeFalsy()
+  })
+
+  test('it detect if the params has a single file', () => {
+    const file1 = new File([], '')
+    const sliceWithASingleFile = { title: 'singleFile1', rawFile: file1 }
+    expect(paramsHasSingleFile(sliceWithASingleFile)).toBeTruthy()
+
+    const sliceWithNotASingleFile = { title: 'singleFile1', wrongKey: file1 }
+    expect(paramsHasSingleFile(sliceWithNotASingleFile)).toBeFalsy()
+  })
+
   test('it extract single file objects', () => {
     const file4 = new File([], '')
 

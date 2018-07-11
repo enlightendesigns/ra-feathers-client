@@ -1,8 +1,9 @@
-type Options = {
+interface Options {
   debug: boolean
 }
-export default Options
 
 export const defaultOptions = {
   debug: false
 }
+
+export default Options

@@ -1,8 +1,10 @@
 import FileContainer from './file-container'
 
-type ParamsWithFiles = {
+interface ParamsWithFiles {
   files: FileContainer[]
-  data: any
+  data: {
+    [key: string]: any
+  }
 }
 
 export default ParamsWithFiles
