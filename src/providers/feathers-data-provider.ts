@@ -1,19 +1,36 @@
-import mapRequest from './translators/map-request'
+import winston, { Logger, LeveledLogMethod } from 'winston'
+import { mapRequest } from './translators/map-request'
 import mapResponse from './translators/map-response'
-import { Options } from './options'
+import Options, { defaultOptions } from './options'
+import AuthenticationResult from './translators/authentication-result'
+import { Application } from '@feathersjs/feathers'
 
-const defaultOption = {
-  debug: false
-}
+export default function feathersDataProvider(
+  client: Application,
+  options: Options = defaultOptions
+) {
+  return async (type: string, resource: string, params: any) => {
+    /* istanbul ignore next */
+    const logLevel: string = options.debug ? 'info' : 'error'
+    /* istanbul ignore next */
+    const logger: Logger = winston.createLogger({
+      level: logLevel,
+      format: winston.format.combine(winston.format.splat(), winston.format.simple()),
+      transports: [new winston.transports.Console()]
+    })
 
-export default function feathersDataProvider(client: any, options: Options = defaultOption) {
-  return async (type: string, resource: string, params: object) => {
+    // if the client is configured with authentication
+    // then the authentication method is available
     if ('authenticate' in client) {
-      const authResult: any = await client.authenticate()
+      const authResult: AuthenticationResult = await client.authenticate()
+      /* istanbul ignore next */
+      logger.info('dataProvider auth result=%j', authResult)
     }
 
-    const feathersResponse: any = await mapRequest(client, options, type, resource, params)
+    /* istanbul ignore next */
+    const feathersResponse: any = await mapRequest(logger, client, options, type, resource, params)
 
+    /* istanbul ignore next */
     return mapResponse(options, feathersResponse, type, resource, params)
   }
 }
