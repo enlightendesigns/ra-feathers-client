@@ -9,15 +9,16 @@ import {
   UPDATE,
   UPDATE_MANY
 } from 'react-admin'
+import { Logger } from 'winston'
 import { Application, Service } from '@feathersjs/feathers'
 import paramsToQuery from './params-to-query'
 import Options from '../options'
-import FileContainer from '../file-container'
-import { getFilesFromParams } from '../../helpers/file-helper'
+import { getFilesFromParams, createFormData, paramsHasFile } from '../../helpers/file-helper'
 import ParamsWithFiles from '../params-with-files'
 import { submitFormData } from '../../helpers/submit-form-data'
 
 async function mapRequest(
+  logger: Logger,
   client: Application,
   options: Options,
   type: string,
@@ -29,18 +30,12 @@ async function mapRequest(
   // retrieve the service matching with the resource
   const service: Service<any> = client.service(resource)
 
-  /* istanbul ignore next */
-  if (debug) {
-    console.log('dataProvider params in', type, params)
-  }
+  logger.info('dataProvider params in type=%s, params=%j', type, params)
 
   // translate the params to feathers query language
   const query = paramsToQuery(type, params)
 
-  /* istanbul ignore next */
-  if (debug) {
-    console.log('dataProvider query out', type, query)
-  }
+  logger.info('dataProvider query out type=%s, params=%j', type, query)
 
   let response: Promise<any>
 
@@ -59,19 +54,9 @@ async function mapRequest(
       break
     case CREATE:
       {
-        const paramsWithFiles: ParamsWithFiles = getFilesFromParams(params)
-        const fileContainers: FileContainer[] = paramsWithFiles.files
-        const data = paramsWithFiles.data
-        // if we have files, we need to bypass the service
-        // and create a custom form object
-        if (fileContainers.length > 0) {
-          const formData = new FormData()
-          for (let i = 0; i < fileContainers.length; i++) {
-            formData.append(fileContainers[i].source, fileContainers[i].file)
-          }
-          for (let name in data) {
-            formData.append(name, data[name])
-          }
+        if (paramsHasFile(params)) {
+          const paramsWithFiles: ParamsWithFiles = getFilesFromParams(params)
+          const formData: FormData = createFormData(paramsWithFiles)
           response = submitFormData(client, resource, formData, 'POST')
         } else {
           response = service.create(query)
@@ -80,20 +65,9 @@ async function mapRequest(
       break
     case UPDATE:
       {
-        const paramsWithFiles: ParamsWithFiles = getFilesFromParams(params)
-        const fileContainers: FileContainer[] = paramsWithFiles.files
-        const data = paramsWithFiles.data
-
-        // if we have files, we need to bypass the service
-        // and create a custom form object
-        if (fileContainers.length > 0) {
-          const formData = new FormData()
-          for (let i = 0; i < fileContainers.length; i++) {
-            formData.append(fileContainers[i].source, fileContainers[i].file)
-          }
-          for (let name in data) {
-            formData.append(name, data[name])
-          }
+        if (paramsHasFile(params)) {
+          const paramsWithFiles: ParamsWithFiles = getFilesFromParams(params)
+          const formData: FormData = createFormData(paramsWithFiles)
           response = submitFormData(client, resource, formData, 'PATCH', query.id)
         } else {
           response = service.patch(query.id, query.data)
@@ -124,9 +98,7 @@ async function mapRequest(
       response = Promise.reject(Error(`${type} mapRequest is unknown`))
   }
 
-  if (debug) {
-    console.log('dataProvider response out', type, response)
-  }
+  logger.info('dataProvider response out type=%s, response=%j', type, response)
 
   return response
 }

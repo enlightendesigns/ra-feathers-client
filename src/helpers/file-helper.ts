@@ -1,7 +1,20 @@
 import FileContainer from '../providers/file-container'
 import ParamsWithFiles from '../providers/params-with-files'
 
-export function paramsHasArrayOfFiles(slice: Object): boolean {
+export function paramsHasFile(params: any): boolean {
+  let hasFile = false
+  const data = { ...params.data }
+
+  for (let key in data) {
+    let slice = data[key]
+    if (paramsHasSingleFile(slice) || paramsHasArrayOfFiles(slice)) {
+      hasFile = true
+    }
+  }
+  return hasFile
+}
+
+export function paramsHasArrayOfFiles(slice: any): boolean {
   let hasArrayOfFiles = false
   if (slice instanceof Object) {
     if (Array.isArray(slice)) {
@@ -64,4 +77,19 @@ export function getFilesFromParams(params: any): ParamsWithFiles {
     files,
     data
   }
+}
+
+export function createFormData(paramsAndFiles: ParamsWithFiles): FormData {
+  const files: FileContainer[] = paramsAndFiles.files
+  const data = paramsAndFiles.data
+  const formData = new FormData()
+
+  for (let i = 0; i < files.length; i++) {
+    formData.append(files[i].source, files[i].file)
+  }
+  for (let name in data) {
+    formData.append(name, data[name])
+  }
+
+  return formData
 }

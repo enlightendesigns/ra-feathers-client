@@ -1,15 +1,7 @@
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_CHECK, AUTH_ERROR, AUTH_GET_PERMISSION } from 'react-admin'
 import { Application } from '@feathersjs/feathers'
 import mapAuth from '../../../src/providers/translators/map-auth'
-
-global.console = {
-  log: () => {
-    // do nothing
-  },
-  warn: () => {
-    // do nothing
-  }
-}
+import { Logger } from 'winston'
 
 describe('map auth', () => {
   const MockApplication = jest.fn<Application>(() => ({
@@ -17,6 +9,12 @@ describe('map auth', () => {
     logout: jest.fn()
   }))
 
+  const MockLogger = jest.fn<Logger>(() => ({
+    info: jest.fn(),
+    warn: jest.fn()
+  }))
+
+  const logger = new MockLogger()
   const jwtTokenKey = 'ra-feathers-token'
 
   test('AUTH_LOGIN', () => {
@@ -30,7 +28,7 @@ describe('map auth', () => {
       strategy: 'local'
     }
     const client = new MockApplication()
-    const response = mapAuth(client, { debug: false }, AUTH_LOGIN, params)
+    const response = mapAuth(logger, client, { debug: false }, AUTH_LOGIN, params)
 
     expect(client.authenticate).toHaveBeenCalledWith(actual)
   })
@@ -41,7 +39,7 @@ describe('map auth', () => {
     expect(localStorage.getItem(jwtTokenKey)).toEqual(token)
 
     const client = new MockApplication()
-    const response = mapAuth(client, { debug: false }, AUTH_LOGOUT, {})
+    const response = mapAuth(logger, client, { debug: false }, AUTH_LOGOUT, {})
     expect(client.logout).toHaveBeenCalled()
     expect(localStorage.getItem(jwtTokenKey)).toBeNull()
   })
@@ -55,7 +53,7 @@ describe('map auth', () => {
       status: 200
     }
     const client = new MockApplication()
-    const response = mapAuth(client, { debug: false }, AUTH_ERROR, params)
+    const response = mapAuth(logger, client, { debug: false }, AUTH_ERROR, params)
     expect(localStorage.getItem(jwtTokenKey)).toBe(token)
 
     await response
@@ -77,7 +75,7 @@ describe('map auth', () => {
       status: 401
     }
     const client = new MockApplication()
-    const response = mapAuth(client, { debug: false }, AUTH_ERROR, params)
+    const response = mapAuth(logger, client, { debug: false }, AUTH_ERROR, params)
     expect(localStorage.getItem(jwtTokenKey)).toBe(null)
 
     await response
@@ -98,7 +96,7 @@ describe('map auth', () => {
       status: 403
     }
     const client = new MockApplication()
-    const response = mapAuth(client, { debug: false }, AUTH_ERROR, params)
+    const response = mapAuth(logger, client, { debug: false }, AUTH_ERROR, params)
     expect(localStorage.getItem(jwtTokenKey)).toBe(null)
 
     await response
@@ -116,7 +114,7 @@ describe('map auth', () => {
     expect(localStorage.getItem(jwtTokenKey)).toEqual(token)
 
     const client = new MockApplication()
-    const response = mapAuth(client, { debug: false }, AUTH_CHECK, {})
+    const response = mapAuth(logger, client, { debug: false }, AUTH_CHECK, {})
     expect(localStorage.getItem(jwtTokenKey)).toBe(token)
 
     await response
@@ -137,7 +135,7 @@ describe('map auth', () => {
     expect(localStorage.getItem(jwtTokenKey)).toEqual(null)
 
     const client = new MockApplication()
-    const response = mapAuth(client, { debug: false }, AUTH_CHECK, {})
+    const response = mapAuth(logger, client, { debug: false }, AUTH_CHECK, {})
     expect(localStorage.getItem(jwtTokenKey)).toBe(null)
 
     await response
@@ -151,7 +149,7 @@ describe('map auth', () => {
 
   test('AUTH_GET_PERMISSION', async () => {
     const client = new MockApplication()
-    const response = mapAuth(client, { debug: false }, 'AUTH_GET_PERMISSION', {})
+    const response = mapAuth(logger, client, { debug: false }, 'AUTH_GET_PERMISSION', {})
 
     await response
       .then(text => {
@@ -166,7 +164,7 @@ describe('map auth', () => {
 
   test('UNKNOWN', async () => {
     const client = new MockApplication()
-    const response = mapAuth(client, { debug: false }, 'UKNOWN', {})
+    const response = mapAuth(logger, client, { debug: false }, 'UKNOWN', {})
 
     await response
       .then(text => {
@@ -179,7 +177,7 @@ describe('map auth', () => {
 
   test('UNKNOWN with debug', async () => {
     const client = new MockApplication()
-    const response = mapAuth(client, { debug: true }, 'UKNOWN', {})
+    const response = mapAuth(logger, client, { debug: true }, 'UKNOWN', {})
 
     await response
       .then(text => {
