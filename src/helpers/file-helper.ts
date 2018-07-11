@@ -3,24 +3,22 @@ import ParamsWithFiles from '../providers/params-with-files'
 
 export function paramsHasFile(params: any): boolean {
   let hasFile = false
-
   for (let key in params.data) {
     let slice = params.data[key]
     if (paramsHasSingleFile(slice) || paramsHasArrayOfFiles(slice)) {
       hasFile = true
     }
   }
+
   return hasFile
 }
 
 export function paramsHasArrayOfFiles(slice: any): boolean {
   let hasArrayOfFiles = false
-  if (slice instanceof Object) {
-    if (Array.isArray(slice)) {
-      for (let i = 0; i < slice.length; i++) {
-        if (slice[i]['rawFile'] !== undefined) {
-          hasArrayOfFiles = true
-        }
+  if (Array.isArray(slice)) {
+    for (let i = 0; i < slice.length; i++) {
+      if (slice[i]['rawFile'] !== undefined) {
+        hasArrayOfFiles = true
       }
     }
   }
@@ -30,7 +28,6 @@ export function paramsHasArrayOfFiles(slice: any): boolean {
 
 export function paramsHasSingleFile(slice: any): boolean {
   let hasSingleFile = false
-
   if (slice['rawFile'] !== undefined) {
     hasSingleFile = true
   }
