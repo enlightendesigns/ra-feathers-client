@@ -67,11 +67,7 @@ async function mapRequest(
         if (fileContainers.length > 0) {
           const formData = new FormData()
           for (let i = 0; i < fileContainers.length; i++) {
-            const fileContainer: FileContainer = fileContainers[i]
-            const source = fileContainer.source
-            const file = fileContainer.file
-
-            formData.append(source, file)
+            formData.append(fileContainers[i].source, fileContainers[i].file)
           }
           for (let name in data) {
             formData.append(name, data[name])
@@ -93,11 +89,7 @@ async function mapRequest(
         if (fileContainers.length > 0) {
           const formData = new FormData()
           for (let i = 0; i < fileContainers.length; i++) {
-            const fileContainer: FileContainer = fileContainers[i]
-            const source = fileContainer.source
-            const file = fileContainer.file
-
-            formData.append(source, file)
+            formData.append(fileContainers[i].source, fileContainers[i].file)
           }
           for (let name in data) {
             formData.append(name, data[name])

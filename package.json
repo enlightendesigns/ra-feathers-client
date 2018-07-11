@@ -135,6 +135,7 @@
   },
   "dependencies": {
     "@types/object-diff": "0.0.0",
-    "object-diff": "0.0.4"
+    "object-diff": "0.0.4",
+    "whatwg-fetch": "^2.0.4"
   }
 }

@@ -7,17 +7,13 @@ export function submitFormData(
   method: string,
   id?: string
 ): Promise<any> {
-  const contentType = { 'Content-Type': 'multipart/form-data' }
   let headers = {
-    headers: new Headers({
-      ...contentType
-    })
+    headers: new Headers({})
   }
   if ('accessToken' in client.settings) {
     const accessToken = client.settings.accessToken
     headers = {
       headers: new Headers({
-        ...contentType,
         Authorization: 'Bearer ' + accessToken
       })
     }
