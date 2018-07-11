@@ -12,7 +12,7 @@
   "author": "Alexandre Guidet <alex@room9.co.nz>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/room9/ra-feathers-client.git"
   },
   "license": "MIT",
   "engines": {
