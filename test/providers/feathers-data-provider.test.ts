@@ -26,6 +26,13 @@ describe('feathers auth provider', () => {
     expect(func).toBeInstanceOf(Function)
   })
 
+  test('it correctly return expected function with debug mode on', () => {
+    const client: Application = new MockApplication()
+    const func = feathersDataProvider(client, { debug: true })
+
+    expect(func).toBeInstanceOf(Function)
+  })
+
   test('it correctly return expected function with default options', () => {
     const client: Application = new MockApplication()
     const func = feathersDataProvider(client)

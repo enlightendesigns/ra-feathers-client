@@ -7,7 +7,9 @@ export default function feathersAuthProvider(
   client: Application,
   options: Options = defaultOptions
 ) {
-  const logLevel = options.debug ? 'info' : 'error'
+  /* istanbul ignore next */
+  const logLevel: string = options.debug ? 'info' : 'error'
+  /* istanbul ignore next */
   const logger: Logger = winston.createLogger({
     level: logLevel,
     format: winston.format.combine(winston.format.splat(), winston.format.simple()),

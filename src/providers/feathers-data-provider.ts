@@ -10,7 +10,9 @@ export default function feathersDataProvider(
   options: Options = defaultOptions
 ) {
   return async (type: string, resource: string, params: any) => {
-    const logLevel = options.debug ? 'info' : 'error'
+    /* istanbul ignore next */
+    const logLevel: string = options.debug ? 'info' : 'error'
+    /* istanbul ignore next */
     const logger: Logger = winston.createLogger({
       level: logLevel,
       format: winston.format.combine(winston.format.splat(), winston.format.simple()),

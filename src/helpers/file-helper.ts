@@ -3,10 +3,9 @@ import ParamsWithFiles from '../providers/params-with-files'
 
 export function paramsHasFile(params: any): boolean {
   let hasFile = false
-  const data = { ...params.data }
 
-  for (let key in data) {
-    let slice = data[key]
+  for (let key in params.data) {
+    let slice = params.data[key]
     if (paramsHasSingleFile(slice) || paramsHasArrayOfFiles(slice)) {
       hasFile = true
     }
