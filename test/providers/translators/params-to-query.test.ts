@@ -113,10 +113,12 @@ describe('translate RA params to Feathers query', () => {
       ids: [123, 321, 654]
     }
     const expected = {
-      id: {
-        $in: [123, 321, 654]
-      },
-      $limit: 3
+      query: {
+        id: {
+          $in: [123, 321, 654]
+        },
+        $limit: 3
+      }
     }
 
     const result = paramsToQuery(GET_MANY, params)

@@ -95,7 +95,7 @@ describe('map response', () => {
 
   test('CREATE', () => {
     const params = { data: { text: 'hello 1' } }
-    const response = { id: 1 }
+    const response = { id: 1, text: 'hello 1' }
     const expected = {
       data: { id: 1, text: 'hello 1' }
     }

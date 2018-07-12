@@ -22,6 +22,11 @@ export default function paramsToQuery(type: string, params: any) {
         }
         query['$limit'] = params.ids.length
       }
+      query = {
+        query: {
+          ...query
+        }
+      }
       break
 
     case GET_MANY_REFERENCE:
