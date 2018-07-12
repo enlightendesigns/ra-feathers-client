@@ -30,12 +30,12 @@ async function mapRequest(
   // retrieve the service matching with the resource
   const service: Service<any> = client.service(resource)
 
-  logger.info('dataProvider params in type=%s, params=%j', type, params)
+  logger.info('dataProvider params in resource=%s, type=%s, params=%j', resource, type, params)
 
   // translate the params to feathers query language
   const query = paramsToQuery(type, params)
 
-  logger.info('dataProvider query out type=%s, params=%j', type, query)
+  logger.info('dataProvider query out resource=%s, type=%s, params=%j', resource, type, query)
 
   let response: Promise<any>
 
@@ -98,7 +98,12 @@ async function mapRequest(
       response = Promise.reject(Error(`${type} mapRequest is unknown`))
   }
 
-  logger.info('dataProvider response out type=%s, response=%j', type, response)
+  logger.info(
+    'dataProvider response out resource=%s, type=%s, response=%j',
+    resource,
+    type,
+    response
+  )
 
   return response
 }

@@ -38,7 +38,7 @@ export default function mapResponse(
     case CREATE:
       mappedResponse = {
         data: {
-          ...params.data,
+          ...response,
           id: response.id
         }
       }
