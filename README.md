@@ -48,12 +48,14 @@ import { feathersDataProvider, feathersAuthProvider } from 'ra-feathers-client'
 const host = 'http://localhost:3030'
 const restClient = feathers.rest(host)
 const client = feathers()
+  // first configure the transport plugins
+  .configure(restClient.fetch(window.fetch))
+  // then configure the authentication
   .configure(feathers.authentication({
       jwtStrategy: 'jwt',
       storage: window.localStorage,
       storageKey: 'ra-feathers-token',
     }))
-  .configure(restClient.fetch(window.fetch))
 
 class App extends React.Component {
   render() {
@@ -70,5 +72,9 @@ class App extends React.Component {
 }
 
 export default App
-  
 ```
+
+### Important
+
+> The transports plugins (Rest, Socket, Primus...) must have been initialized previously to the authentication plugin.
+https://docs.feathersjs.com/api/authentication/client.html#appconfigureauthoptions
