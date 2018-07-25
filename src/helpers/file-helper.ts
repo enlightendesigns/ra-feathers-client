@@ -5,8 +5,10 @@ export function paramsHasFile(params: any): boolean {
   let hasFile = false
   for (let key in params.data) {
     let slice = params.data[key]
-    if (paramsHasSingleFile(slice) || paramsHasArrayOfFiles(slice)) {
-      hasFile = true
+    if (slice !== undefined && slice !== null) {
+      if (paramsHasSingleFile(slice) || paramsHasArrayOfFiles(slice)) {
+        hasFile = true
+      }
     }
   }
 
