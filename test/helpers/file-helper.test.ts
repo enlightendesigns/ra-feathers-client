@@ -1,7 +1,8 @@
 import {
   getFilesFromParams,
   paramsHasSingleFile,
-  paramsHasArrayOfFiles
+  paramsHasArrayOfFiles,
+  paramsHasFile
 } from '../../src/helpers/file-helper'
 
 describe('file helper', () => {
@@ -182,5 +183,36 @@ describe('file helper', () => {
     const actual = getFilesFromParams(params)
 
     expect(actual).toEqual(expected)
+  })
+
+  test('it ignore undefined and null fields', () => {
+    const file4 = new File([], '')
+
+    const paramsWithFile = {
+      data: {
+        singleFile: { title: 'singleFile1', rawFile: file4 },
+        id: 321,
+        text: 'some text',
+        undefinedField: undefined,
+        nullField: null
+      }
+    }
+
+    const actualWithFile = paramsHasFile(paramsWithFile)
+
+    expect(actualWithFile).toEqual(true)
+
+    const paramsWithNoFile = {
+      data: {
+        id: 321,
+        text: 'some text',
+        undefinedField: undefined,
+        nullField: null
+      }
+    }
+
+    const actualWithNoFile = paramsHasFile(paramsWithNoFile)
+
+    expect(actualWithNoFile).toEqual(false)
   })
 })
