@@ -1,7 +1,7 @@
 {
-  "name": "ra-feathers-client",
+  "name": "@room9/ra-feathers-client",
   "version": "0.0.0",
-  "description": "",
+  "description": "[Feathers](https://feathersjs.com/) data and authentication provider to be used with [react admin](https://github.com/marmelab/react-admin)",
   "keywords": [],
   "main": "dist/ra-feathers-client.umd.js",
   "module": "dist/ra-feathers-client.es5.js",
@@ -12,7 +12,7 @@
   "author": "Alexandre Guidet <alex@room9.co.nz>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/room9/ra-feathers-client.git"
+    "url": "git+https://github.com/room9/ra-feathers-client.git"
   },
   "license": "MIT",
   "engines": {
@@ -139,5 +139,13 @@
     "object-diff": "0.0.4",
     "whatwg-fetch": "^2.0.4",
     "winston": "^3.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/room9/ra-feathers-client/issues"
+  },
+  "homepage": "https://github.com/room9/ra-feathers-client#readme",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
   }
 }
