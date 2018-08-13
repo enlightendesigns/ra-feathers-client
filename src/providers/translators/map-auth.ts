@@ -1,22 +1,16 @@
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_CHECK, AUTH_ERROR } from 'react-admin'
-import { Logger } from 'winston'
 import { Application } from '@feathersjs/feathers'
 import { FeathersAuthCredentials } from '@feathersjs/authentication-client'
 import Options from '../options'
 import AuthenticationResult from './authentication-result'
 
 export default async function mapAuth(
-  logger: Logger,
   client: Application,
   options: Options,
   type: string,
   params: any
 ): Promise<AuthenticationResult | void | string> {
-  const debug: boolean = options.debug
-  const permissionKey = 'permissions'
-  const permissionField = 'roles'
   const storageKey = 'ra-feathers-token'
-
   let response: Promise<AuthenticationResult | void | string>
 
   switch (type) {
@@ -40,7 +34,9 @@ export default async function mapAuth(
         localStorage.removeItem(storageKey)
         response = Promise.reject(`Authentication error with status ${status}`)
       } else {
-        logger.warn('Uknown Authentication error', params.status, params)
+        if (options.debug) {
+          console.warn('Unknown Authentication error', params.status, params)
+        }
         response = Promise.resolve()
       }
       break
@@ -56,7 +52,9 @@ export default async function mapAuth(
       response = Promise.reject(new Error(`Unsupported FeathersJS authClient action type ${type}`))
   }
 
-  logger.info('authProvider response type=%s, response=%j', type, response)
+  if (options.debug) {
+    console.log('authProvider response type=%s, response=%j', type, response)
+  }
 
   return response
 }

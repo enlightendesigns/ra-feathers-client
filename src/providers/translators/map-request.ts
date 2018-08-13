@@ -9,7 +9,6 @@ import {
   UPDATE,
   UPDATE_MANY
 } from 'react-admin'
-import { Logger } from 'winston'
 import { Application, Service } from '@feathersjs/feathers'
 import paramsToQuery from './params-to-query'
 import Options from '../options'
@@ -18,24 +17,25 @@ import ParamsWithFiles from '../params-with-files'
 import { submitFormData } from '../../helpers/submit-form-data'
 
 async function mapRequest(
-  logger: Logger,
   client: Application,
   options: Options,
   type: string,
   resource: string,
   params: any
 ): Promise<any> {
-  const debug: boolean = options.debug
-
   // retrieve the service matching with the resource
   const service: Service<any> = client.service(resource)
 
-  logger.info('dataProvider params in resource=%s, type=%s, params=%j', resource, type, params)
+  if (options.debug) {
+    console.log('dataProvider params in resource=%s, type=%s, params=%j', resource, type, params)
+  }
 
   // translate the params to feathers query language
   const query = paramsToQuery(type, params)
 
-  logger.info('dataProvider query out resource=%s, type=%s, params=%j', resource, type, query)
+  if (options.debug) {
+    console.log('dataProvider query out resource=%s, type=%s, params=%j', resource, type, query)
+  }
 
   let response: Promise<any>
 
@@ -98,12 +98,14 @@ async function mapRequest(
       response = Promise.reject(Error(`${type} mapRequest is unknown`))
   }
 
-  logger.info(
-    'dataProvider response out resource=%s, type=%s, response=%j',
-    resource,
-    type,
-    response
-  )
+  if (options.debug) {
+    console.log(
+      'dataProvider response out resource=%s, type=%s, response=%j',
+      resource,
+      type,
+      response
+    )
+  }
 
   return response
 }
