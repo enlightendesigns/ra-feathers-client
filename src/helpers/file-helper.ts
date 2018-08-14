@@ -4,8 +4,12 @@ import ParamsWithFiles from '../providers/params-with-files'
 export function paramsHasFile(params: any): boolean {
   let hasFile = false
   for (let key in params.data) {
-    let slice = params.data[key]
-    if (slice !== undefined && slice !== null) {
+    if (
+      params.data.hasOwnProperty(key) &&
+      params.data[key] !== null &&
+      params.data[key] !== undefined
+    ) {
+      let slice = params.data[key]
       if (paramsHasSingleFile(slice) || paramsHasArrayOfFiles(slice)) {
         hasFile = true
       }
@@ -48,26 +52,28 @@ export function getFilesFromParams(params: any): ParamsWithFiles {
   const data = { ...params.data }
 
   for (let key in data) {
-    let slice = data[key]
+    if (data.hasOwnProperty(key) && data[key] !== null && data[key] !== undefined) {
+      let slice = data[key]
 
-    if (paramsHasArrayOfFiles(slice)) {
-      for (let i = 0; i < slice.length; i++) {
+      if (paramsHasArrayOfFiles(slice)) {
+        for (let i = 0; i < slice.length; i++) {
+          const currentFile = {
+            source: `${key}[]`,
+            file: slice[i].rawFile,
+            title: slice[i].title
+          }
+          files.push(currentFile)
+        }
+        delete data[key]
+      } else if (paramsHasSingleFile(slice)) {
         const currentFile = {
-          source: `${key}[]`,
-          file: slice[i].rawFile,
-          title: slice[i].title
+          source: key,
+          file: slice.rawFile,
+          title: slice.title
         }
         files.push(currentFile)
+        delete data[key]
       }
-      delete data[key]
-    } else if (paramsHasSingleFile(slice)) {
-      const currentFile = {
-        source: key,
-        file: slice.rawFile,
-        title: slice.title
-      }
-      files.push(currentFile)
-      delete data[key]
     }
   }
 

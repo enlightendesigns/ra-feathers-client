@@ -1,6 +1,6 @@
 {
   "name": "@room9/ra-feathers-client",
-  "version": "0.0.0",
+  "version": "0.2.9",
   "description": "[Feathers](https://feathersjs.com/) data and authentication provider to be used with [react admin](https://github.com/marmelab/react-admin)",
   "keywords": [],
   "main": "dist/ra-feathers-client.umd.js",
